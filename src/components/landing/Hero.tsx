@@ -4,17 +4,23 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "../ui/Button";
+import { useAuth, UserButton } from "@clerk/nextjs";
 import {
   ArrowRight,
   ArrowDown,
   Star,
-  X,
-  Heart,
   UtensilsCrossed,
   User,
 } from "lucide-react";
 
 export default function Hero() {
+  const { isSignedIn } = useAuth();
+
+  // Where "Create Room" should take the user
+  const createRoomHref = isSignedIn
+    ? "/location?mode=create"
+    : "/sign-in?redirect_url=%2Flocation%3Fmode%3Dcreate";
+
   return (
     <section className="min-h-screen relative overflow-hidden">
       {/* Background Effects — Vibrant multi-color orbs */}
@@ -78,11 +84,38 @@ export default function Hero() {
               Join Room
             </button>
           </Link>
-          <Link href="/location?mode=create">
-            <button className="text-sm bg-accent-primary text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-[0_8px_32px_rgba(255,58,92,0.3)] transition-all duration-300">
-              Get Started
-            </button>
-          </Link>
+
+          {isSignedIn ? (
+            <>
+              <Link href="/location?mode=create">
+                <button className="text-sm bg-accent-primary text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-[0_8px_32px_rgba(255,58,92,0.3)] transition-all duration-300">
+                  Create Room
+                </button>
+              </Link>
+              <UserButton
+                appearance={{
+                  variables: {
+                    colorPrimary: "#ff3a5c",
+                  },
+                  elements: {
+                    avatarBox: "w-9 h-9 ring-2 ring-[#ff3a5c]/30",
+                    userButtonPopoverCard:
+                      "bg-[#0e0e14] border border-white/[0.06] shadow-2xl",
+                    userButtonPopoverActionButton:
+                      "text-[#f0f0f5] hover:bg-[#16161f]",
+                    userButtonPopoverActionButtonText: "text-[#f0f0f5]",
+                    userButtonPopoverFooter: "hidden",
+                  },
+                }}
+              />
+            </>
+          ) : (
+            <Link href={createRoomHref}>
+              <button className="text-sm bg-accent-primary text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-[0_8px_32px_rgba(255,58,92,0.3)] transition-all duration-300">
+                Get Started
+              </button>
+            </Link>
+          )}
         </div>
       </motion.nav>
 
@@ -109,7 +142,7 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-display mb-6"
             >
-              <span className="text-text-primary">Swipe & Match </span>
+              <span className="text-text-primary">Swipe &amp; Match </span>
               <br />
               <span className="text-text-primary">Your Perfect </span>
               <br />
@@ -133,7 +166,7 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="flex flex-wrap items-center gap-4 mb-12"
             >
-              <Link href="/location?mode=create">
+              <Link href={createRoomHref}>
                 <Button variant="primary" size="lg">
                   <span className="flex items-center gap-2.5">
                     Create Room
