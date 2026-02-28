@@ -36,6 +36,13 @@ function LocationContent() {
   const mode = searchParams.get("mode") || "create";
   const hasDetected = useRef(false);
 
+  // Joiners don't need to select a location — redirect them to join page
+  useEffect(() => {
+    if (mode === "join") {
+      router.replace("/room/join");
+    }
+  }, [mode, router]);
+
   const [location, setLocation] = useState<LocationData | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);

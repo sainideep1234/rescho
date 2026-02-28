@@ -1,19 +1,19 @@
-import { createServer } from 'http';
-import { parse } from 'url';
-import next from 'next';
-import { Server as SocketServer, Socket } from 'socket.io';
-import { 
-  getRoomById, 
-  addUserToRoom, 
-  removeUserFromRoom, 
+import { createServer } from "http";
+import { parse } from "url";
+import next from "next";
+import { Server as SocketServer, Socket } from "socket.io";
+import {
+  getRoomById,
+  addUserToRoom,
+  removeUserFromRoom,
   recordSwipe,
-  setRoomRestaurants
-} from '../src/lib/room/manager';
-import { searchRestaurants } from '../src/lib/api/foursquare';
+  setRoomRestaurants,
+} from "../src/lib/room/manager";
+import { searchRestaurants } from "../src/lib/api/foursquare";
 
-const dev = process.env.NODE_ENV !== 'production';
-const hostname = 'localhost';
-const port = parseInt(process.env.PORT || '3000', 10);
+const dev = process.env.NODE_ENV !== "production";
+const hostname = "localhost";
+const port = parseInt(process.env.PORT || "3000", 10);
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
@@ -31,28 +31,28 @@ app.prepare().then(() => {
   const io = new SocketServer(httpServer, {
     cors: {
       origin: process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${port}`,
-      methods: ['GET', 'POST'],
+      methods: ["GET", "POST"],
     },
-    path: '/api/socketio',
+    path: "/api/socketio",
   });
 
-  io.on('connection', (socket) => {
+  io.on("connection", (socket) => {
     console.log(`Client connected: ${socket.id}`);
 
     // Handle room joining
-    socket.on('join-room', async (data: { roomId: string; userId: string }) => {
+    socket.on("join-room", async (data: { roomId: string; userId: string }) => {
       const { roomId, userId } = data;
-      
+
       const room = getRoomById(roomId);
       if (!room) {
-        socket.emit('error', { message: 'Room not found' });
+        socket.emit("error", { message: "Room not found" });
         return;
       }
 
       // Add user to room
       const success = addUserToRoom(roomId, userId);
       if (!success) {
-        socket.emit('error', { message: 'Failed to join room' });
+        socket.emit("error", { message: "Failed to join room" });
         return;
       }
 
@@ -64,7 +64,7 @@ app.prepare().then(() => {
       socket.join(roomId);
 
       // Notify other users in room
-      socket.to(roomId).emit('partner-joined', { partnerId: userId });
+      socket.to(roomId).emit("partner-joined", { partnerId: userId });
 
       // Fetch restaurants if not already done
       const updatedRoom = getRoomById(roomId);
@@ -73,24 +73,24 @@ app.prepare().then(() => {
           const restaurants = await searchRestaurants(
             updatedRoom.location.lat,
             updatedRoom.location.lng,
-            50
+            50,
           );
           setRoomRestaurants(roomId, restaurants);
-          
+
           // Notify all users in room that data is ready
-          io.to(roomId).emit('room-ready', { 
+          io.to(roomId).emit("room-ready", {
             restaurants: restaurants.length,
-            restaurantData: restaurants
+            restaurantData: restaurants,
           });
         } catch (error) {
-          console.error('Failed to fetch restaurants:', error);
-          socket.emit('error', { message: 'Failed to load restaurants' });
+          console.error("Failed to fetch restaurants:", error);
+          socket.emit("error", { message: "Failed to load restaurants" });
         }
       } else if (updatedRoom && updatedRoom.restaurants.length > 0) {
         // Send existing restaurant data to new user
-        socket.emit('room-ready', { 
+        socket.emit("room-ready", {
           restaurants: updatedRoom.restaurants.length,
-          restaurantData: updatedRoom.restaurants
+          restaurantData: updatedRoom.restaurants,
         });
       }
 
@@ -98,41 +98,51 @@ app.prepare().then(() => {
     });
 
     // Handle swipe events
-    socket.on('swipe', (data: { roomId: string; userId: string; restaurantId: string; direction: 'left' | 'right' }) => {
-      const { roomId, userId, restaurantId, direction } = data;
+    socket.on(
+      "swipe",
+      (data: {
+        roomId: string;
+        userId: string;
+        restaurantId: string;
+        direction: "left" | "right";
+      }) => {
+        const { roomId, userId, restaurantId, direction } = data;
 
-      const result = recordSwipe(roomId, userId, restaurantId, direction);
-      
-      if (!result.success) {
-        socket.emit('error', { message: 'Failed to record swipe' });
-        return;
-      }
+        const result = recordSwipe(roomId, userId, restaurantId, direction);
 
-      // Notify partner of swipe
-      socket.to(roomId).emit('partner-swiped', { restaurantId, direction });
+        if (!result.success) {
+          socket.emit("error", { message: "Failed to record swipe" });
+          return;
+        }
 
-      if (result.isMatch) {
-        // Get restaurant details
-        const room = getRoomById(roomId);
-        const restaurant = room?.restaurants.find(r => r.id === restaurantId);
-        
-        // Notify both users of match
-        io.to(roomId).emit('match-found', { 
-          restaurantId,
-          restaurantName: restaurant?.name || 'Restaurant',
-          restaurant
-        });
-      }
-    });
+        // Notify partner of swipe
+        socket.to(roomId).emit("partner-swiped", { restaurantId, direction });
+
+        if (result.isMatch) {
+          // Get restaurant details
+          const room = getRoomById(roomId);
+          const restaurant = room?.restaurants.find(
+            (r: { id: string }) => r.id === restaurantId,
+          );
+
+          // Notify both users of match
+          io.to(roomId).emit("match-found", {
+            restaurantId,
+            restaurantName: restaurant?.name || "Restaurant",
+            restaurant,
+          });
+        }
+      },
+    );
 
     // Handle leaving room
-    socket.on('leave-room', (data: { roomId: string; userId: string }) => {
+    socket.on("leave-room", (data: { roomId: string; userId: string }) => {
       const { roomId, userId } = data;
       handleUserLeave(socket, userId, roomId);
     });
 
     // Handle disconnect
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
       const userId = userSockets.get(socket.id);
       const roomId = userId ? userRooms.get(userId) : null;
 
@@ -147,9 +157,9 @@ app.prepare().then(() => {
   function handleUserLeave(socket: Socket, userId: string, roomId: string) {
     removeUserFromRoom(roomId, userId);
     socket.leave(roomId);
-    
+
     // Notify partner
-    socket.to(roomId).emit('partner-disconnected', { partnerId: userId });
+    socket.to(roomId).emit("partner-disconnected", { partnerId: userId });
 
     // Clean up tracking
     userSockets.delete(socket.id);

@@ -33,11 +33,18 @@ export default function Hero() {
       >
         <div className="flex items-center gap-3">
           <Image
-            src="/logo.png"
+            src="/favicon.png"
             alt="RESCHO Logo"
-            width={32}
-            height={32}
-            className="rounded-xl"
+            width={44}
+            height={44}
+            style={{
+              width: 44,
+              height: 44,
+              objectFit: "cover",
+              borderRadius: "10px",
+            }}
+            unoptimized
+            priority
           />
           <span className="text-lg font-bold text-text-primary tracking-tight">
             RESCHO
@@ -66,7 +73,7 @@ export default function Hero() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href="/location?mode=join">
+          <Link href="/room/join">
             <button className="text-sm text-text-secondary hover:text-text-primary transition-colors px-4 py-2.5">
               Join Room
             </button>
@@ -134,7 +141,7 @@ export default function Hero() {
                   </span>
                 </Button>
               </Link>
-              <Link href="/location?mode=join" className="group">
+              <Link href="/room/join" className="group">
                 <span className="flex items-center gap-2 text-accent-secondary font-semibold group-hover:text-accent-secondary/80 transition-colors text-sm">
                   Join Room
                   <span className="group-hover:translate-x-1 transition-transform duration-200">

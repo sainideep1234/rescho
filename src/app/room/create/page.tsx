@@ -49,11 +49,14 @@ export default function CreateRoomPage() {
 
   const initializeRoom = async (loc: LocationData) => {
     try {
-      // Step 1: Create the room
+      // Generate userId before room creation so we can register the creator server-side
+      const userId = uuidv4();
+
+      // Step 1: Create the room (register creator at the same time)
       const response = await fetch("/api/rooms/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ location: loc }),
+        body: JSON.stringify({ location: loc, userId }),
       });
 
       if (!response.ok) {
@@ -65,14 +68,14 @@ export default function CreateRoomPage() {
       setRoomId(data.roomId);
 
       // Store session data
-      const userId = uuidv4();
       sessionStorage.setItem("rescho_user_id", userId);
       sessionStorage.setItem("rescho_room_id", data.roomId);
       sessionStorage.setItem("rescho_room_code", data.code);
+      sessionStorage.setItem("rescho_is_creator", "true");
 
       setIsLoading(false);
 
-      // Step 2: Pre-fetch restaurants and register with room (in background)
+      // Step 2: Pre-fetch restaurants and cache them for instant load on swipe page
       prefetchAndRegisterRestaurants(loc, data.roomId);
     } catch (err) {
       console.error(err);
@@ -81,7 +84,6 @@ export default function CreateRoomPage() {
     }
   };
 
-  // Pre-fetch restaurants AND register them with the room for server-side match detection
   const prefetchAndRegisterRestaurants = async (
     loc: LocationData,
     createdRoomId: string,
@@ -97,13 +99,16 @@ export default function CreateRoomPage() {
           "rescho_restaurants",
           JSON.stringify(data.restaurants),
         );
+      }
 
-        // Register restaurants with the room on the server (for match detection)
-        await fetch(`/api/rooms/${createdRoomId}/matches`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ restaurants: data.restaurants }),
-        });
+      // Register restaurants server-side by triggering the state endpoint
+      // This ensures the joiner gets the same list when they poll
+      const userId = sessionStorage.getItem("rescho_user_id");
+      if (userId && createdRoomId) {
+        await fetch(
+          `/api/rooms/${createdRoomId}/state?userId=${encodeURIComponent(userId)}`,
+          { cache: "no-store" },
+        );
       }
     } catch (err) {
       console.error(

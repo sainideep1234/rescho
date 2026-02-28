@@ -15,7 +15,7 @@ interface MatchModalProps {
 }
 
 // Pre-generated confetti particles (static to avoid impure function calls)
-const CONFETTI_COLORS = ["#ff3a5c", "#a855f7", "#06d6a0", "#f0f0f5", "#d4284a"];
+const CONFETTI_COLORS = ["#ff3a5c", "#c0182e", "#d4284a", "#f0f0f5", "#7a0f1e"];
 const INITIAL_PARTICLES = Array.from({ length: 50 }, (_, i) => ({
   id: i,
   x: (i * 17 + 7) % 100, // Deterministic distribution

@@ -52,6 +52,9 @@ export default function JoinRoomPage() {
       sessionStorage.setItem("rescho_room_id", data.roomId);
       sessionStorage.setItem("rescho_room_code", code);
       sessionStorage.setItem("rescho_location", JSON.stringify(data.location));
+      sessionStorage.setItem("rescho_is_creator", "false");
+      // Clear any previously cached restaurants — joiner gets the creator's list
+      sessionStorage.removeItem("rescho_restaurants");
 
       // Navigate to swipe page
       router.push(`/room/${data.roomId}`);

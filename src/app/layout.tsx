@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   description:
     "A gamified restaurant matching app. Connect with your partner, swipe through restaurants, and find the perfect place for your next meal together.",
   keywords: ["restaurant", "dating", "dinner", "matching", "food", "swipe"],
+  icons: {
+    icon: [{ url: "/favicon.png", type: "image/png" }],
+    apple: [{ url: "/favicon.png" }],
+    shortcut: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
