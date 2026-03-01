@@ -50,7 +50,7 @@ export default function Features() {
               className="col-span-2 row-span-2 group relative rounded-2xl overflow-hidden border border-white/[0.04] bg-bg-secondary min-h-[300px] md:min-h-[380px]"
             >
               <Image
-                src="/food-sushi.png"
+                src="/food-sushi.webp"
                 alt="Premium Sushi"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -112,7 +112,7 @@ export default function Features() {
               className="col-span-1 group relative rounded-2xl overflow-hidden border border-white/[0.04] bg-bg-secondary min-h-[170px]"
             >
               <Image
-                src="/food-pasta.png"
+                src="/food-pasta.webp"
                 alt="Italian pasta"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -133,7 +133,7 @@ export default function Features() {
               className="col-span-1 group relative rounded-2xl overflow-hidden border border-white/[0.04] bg-bg-secondary min-h-[170px]"
             >
               <Image
-                src="/food-burger.png"
+                src="/food-burger.webp"
                 alt="Gourmet burger"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -389,7 +389,7 @@ export default function Features() {
                             className="absolute inset-x-3 top-0 bottom-2 rounded-xl overflow-hidden"
                           >
                             <Image
-                              src="/food-pasta.png"
+                              src="/food-pasta.webp"
                               alt="Restaurant preview"
                               fill
                               className="object-cover"

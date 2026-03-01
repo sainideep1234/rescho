@@ -231,7 +231,7 @@ export default function Hero() {
             <div className="relative rounded-3xl overflow-hidden border border-white/[0.06] bg-bg-secondary/50 backdrop-blur-sm shadow-2xl">
               <div className="relative aspect-square max-w-lg mx-auto">
                 <Image
-                  src="/hero-food.png"
+                  src="/hero-food.webp"
                   alt="Gourmet food"
                   fill
                   className="object-cover"
