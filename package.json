@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "start:socket": "NODE_ENV=production tsx server/index.ts",
+    "start:render": "NODE_ENV=production npx tsx server/index.ts",
     "lint": "eslint"
   },
   "dependencies": {

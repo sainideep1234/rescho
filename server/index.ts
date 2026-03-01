@@ -23,15 +23,39 @@ const userSockets = new Map<string, string>(); // socketId -> userId
 const userRooms = new Map<string, string>(); // userId -> roomId
 
 app.prepare().then(() => {
+  // Allow both local dev and any deployed frontend URL
+  const allowedOrigins = [
+    `http://localhost:${port}`,
+    "http://localhost:3000",
+    process.env.NEXT_PUBLIC_APP_URL,
+    process.env.FRONTEND_URL,
+  ].filter(Boolean) as string[];
+
   const httpServer = createServer((req, res) => {
     const parsedUrl = parse(req.url!, true);
+
+    // Health check endpoint — lets UptimeRobot ping to prevent cold starts
+    if (parsedUrl.pathname === "/health") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({ status: "ok", timestamp: new Date().toISOString() }),
+      );
+      return;
+    }
+
     handle(req, res, parsedUrl);
   });
 
   const io = new SocketServer(httpServer, {
     cors: {
-      origin: process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${port}`,
+      origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, curl, UptimeRobot)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        callback(new Error(`CORS blocked: ${origin}`));
+      },
       methods: ["GET", "POST"],
+      credentials: true,
     },
     path: "/api/socketio",
   });
