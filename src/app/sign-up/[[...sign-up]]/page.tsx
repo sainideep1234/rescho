@@ -23,15 +23,20 @@ export default function SignUpPage() {
           className="flex flex-col items-center mb-8"
         >
           <Link href="/" className="flex items-center gap-3 mb-4">
-            <Image
-              src="/favicon.png"
-              alt="RESCHO Logo"
-              width={48}
-              height={48}
-              style={{ borderRadius: "12px", objectFit: "cover" }}
-              unoptimized
-              priority
-            />
+            <div
+              className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden"
+              style={{ colorScheme: "light" }}
+            >
+              <Image
+                src="/logo.webp"
+                alt="RESCHO Logo"
+                width={36}
+                height={36}
+                className="object-contain"
+                unoptimized
+                priority
+              />
+            </div>
             <span className="text-xl font-bold text-text-primary tracking-tight">
               RESCHO
             </span>

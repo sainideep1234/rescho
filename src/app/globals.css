@@ -22,6 +22,8 @@
   /* Mapped to Tailwind */
   --background: var(--bg-primary);
   --foreground: var(--text-primary);
+
+  color-scheme: dark;
 }
 
 @theme inline {

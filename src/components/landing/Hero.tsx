@@ -37,22 +37,22 @@ export default function Hero() {
         transition={{ duration: 0.6 }}
         className="relative z-20 flex items-center justify-between px-6 lg:px-16 py-5"
       >
-        <div className="flex items-center gap-3">
-          <Image
-            src="/favicon.png"
-            alt="RESCHO Logo"
-            width={44}
-            height={44}
-            style={{
-              width: 44,
-              height: 44,
-              objectFit: "cover",
-              borderRadius: "10px",
-            }}
-            unoptimized
-            priority
-          />
-          <span className="text-lg font-bold text-text-primary tracking-tight">
+        <div className="flex items-center gap-3 group cursor-pointer">
+          <div
+            className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden"
+            style={{ colorScheme: "light" }}
+          >
+            <Image
+              src="/logo.webp"
+              alt="RESCHO Logo"
+              width={32}
+              height={32}
+              className="object-contain"
+              unoptimized
+              priority
+            />
+          </div>
+          <span className="text-xl font-bold text-text-primary tracking-tight group-hover:text-accent-primary transition-all duration-300">
             RESCHO
           </span>
         </div>
