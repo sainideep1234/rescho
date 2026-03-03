@@ -39,15 +39,15 @@ export default function Hero() {
       >
         <div className="flex items-center gap-3 group cursor-pointer">
           <div
-            className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden"
-            style={{ colorScheme: "light" }}
+            className="w-11 h-11  rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden"
+            style={{ colorScheme: "dark"}}
           >
             <Image
               src="/logo.webp"
               alt="RESCHO Logo"
-              width={32}
-              height={32}
-              className="object-contain"
+              width={42}
+              height={42}
+              className="object-contain "
               unoptimized
               priority
             />

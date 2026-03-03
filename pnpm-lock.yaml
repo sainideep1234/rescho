@@ -63,9 +63,6 @@ importers:
       eslint-config-next:
         specifier: 16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.56.1(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
-      nextjs:
-        specifier: link:@types/@clerk/nextjs
-        version: link:@types/@clerk/nextjs
       tailwindcss:
         specifier: ^4
         version: 4.2.1
