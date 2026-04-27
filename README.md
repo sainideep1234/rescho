@@ -48,7 +48,7 @@ rescho/
 
 ## V1 proposal
 - write now you can choose the restaurants which you want to like , 
-
+- add a share button at the end that allows you to copy the room code and send to your partner. 
 
 ## V2 proposal 
 - people while creatzaing room choose wheatreh they want to choose , cuisine (indian , italion) , food type(dinner , luch , breakfast )

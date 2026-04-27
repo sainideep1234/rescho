@@ -24,8 +24,8 @@ export default function SignInPage() {
         >
           <Link href="/" className="flex items-center gap-3 mb-4">
             <div
-              className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden"
-              style={{ colorScheme: "light" }}
+              className="rounded-xl flex items-center justify-center shadow-lg  overflow-hidden"
+              style={{ colorScheme: "dark" }}
             >
               <Image
                 src="/logo.webp"
@@ -33,7 +33,6 @@ export default function SignInPage() {
                 width={36}
                 height={36}
                 className="object-contain"
-                unoptimized
                 priority
               />
             </div>

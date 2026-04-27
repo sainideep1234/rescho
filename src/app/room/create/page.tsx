@@ -14,6 +14,7 @@ import {
   MapPin,
   User,
   Plus,
+  Share2,
 } from "lucide-react";
 
 interface LocationData {
@@ -138,6 +139,29 @@ export default function CreateRoomPage() {
     }
   };
 
+  const handleShare = async () => {
+    if (!roomCode) return;
+
+    const shareData = {
+      title: "Join my Rescho Room!",
+      text: `Join my restaurant matching room on Rescho! Use code: ${roomCode}`,
+      url: `${window.location.origin}/room/join?code=${roomCode}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          console.error("Share failed:", err);
+        }
+      }
+    } else {
+      // Fallback: Copy to clipboard (already handled by Copy button, but we can alert or show a message)
+      copyCode();
+    }
+  };
+
   const startSwiping = () => {
     if (roomId) {
       router.push(`/room/${roomId}`);
@@ -216,23 +240,33 @@ export default function CreateRoomPage() {
             <div className="text-5xl font-mono font-bold tracking-[0.3em] text-accent-primary mb-4">
               {roomCode}
             </div>
-            <Button
-              variant="ghost"
-              onClick={copyCode}
-              className="text-text-secondary hover:text-accent-primary"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-5 h-5 mr-2" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-5 h-5 mr-2" />
-                  Copy Code
-                </>
-              )}
-            </Button>
+            <div className="flex items-center justify-center gap-4">
+              <Button
+                variant="ghost"
+                onClick={copyCode}
+                className="text-text-secondary hover:text-accent-primary"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-5 h-5 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-5 h-5 mr-2" />
+                    Copy Code
+                  </>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={handleShare}
+                className="text-text-secondary hover:text-accent-primary"
+              >
+                <Share2 className="w-5 h-5 mr-2" />
+                Share
+              </Button>
+            </div>
           </motion.div>
 
           {/* Location Info */}

@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   Wifi,
   WifiOff,
+  Share2,
 } from "lucide-react";
 
 interface MatchData {
@@ -249,6 +250,33 @@ export default function SwipePage() {
     [roomId, seenMatchIds, pollRoomState],
   );
 
+  const handleShare = async () => {
+    if (!roomCode) return;
+
+    const shareData = {
+      title: "Join my Rescho Room!",
+      text: `Join my restaurant matching room on Rescho! Use code: ${roomCode}`,
+      url: `${window.location.origin}/room/join?code=${roomCode}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          console.error("Share failed:", err);
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(roomCode);
+        alert("Room code copied to clipboard!");
+      } catch {
+        console.error("Clipboard copy failed");
+      }
+    }
+  };
+
   const handleLeaveRoom = () => {
     if (pollTimerRef.current) clearInterval(pollTimerRef.current);
     if (matchPollTimerRef.current) clearInterval(matchPollTimerRef.current);
@@ -316,10 +344,23 @@ export default function SwipePage() {
         {/* Left spacer to keep room code centred */}
         <div className="w-10" />
 
-        <div className="text-center">
-          <div className="text-xs text-text-muted">Room Code</div>
-          <div className="font-mono font-bold text-accent-primary text-lg tracking-widest">
-            {roomCode}
+        <div className="flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-[10px] uppercase tracking-tighter text-text-muted mb-0.5">
+              Room Code
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="font-mono font-bold text-accent-primary text-lg tracking-[0.2em]">
+                {roomCode}
+              </div>
+              <button
+                onClick={handleShare}
+                className="p-1.5 rounded-lg bg-bg-tertiary/50 text-text-secondary hover:text-accent-primary transition-colors"
+                title="Share Room Code"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
 
