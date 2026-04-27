@@ -25,7 +25,7 @@ export default function SignUpPage() {
           <Link href="/" className="flex items-center gap-3 mb-4">
             <div
               className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden"
-              style={{ colorScheme: "light" }}
+              style={{ colorScheme: "dark" }}
             >
               <Image
                 src="/logo.webp"
